@@ -68,7 +68,7 @@ public class Card {
                return 13;
        }
    }
-   private int setSuitValue() {;
+   private int setSuitValue() {
        switch (this.face) {
            case "Hearts":
                return 1;
