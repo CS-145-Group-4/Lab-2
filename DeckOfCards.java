@@ -1,14 +1,12 @@
 // Raymond Daniels, Mali Brunk
 // CS 145
 // Lab 2: Card Shuffling and Dealing
-// Source: Deitel/Deitel
 // 01/17/24
 
 import java.util.*;
 
 public class DeckOfCards {
     private static final int NUMBER_OF_CARDS = 52;
-    private final int HAND_SIZE = 5;
     private Card[] deck; // Initializes array of card objects
     private int currentCard; // Index of next card to be dealt
 
@@ -39,14 +37,15 @@ public class DeckOfCards {
         }
     }
 
-    public Card[] deal() {
-        Card[] hand = new Card[HAND_SIZE];
-        for (int deckPosition = 0; deckPosition < HAND_SIZE; deckPosition++) {
+    public Card[] dealHand(int handSize) {
+        Card[] hand = new Card[handSize];
+        for (int deckPosition = 0; deckPosition < handSize; deckPosition++) {
             hand[deckPosition] = deck[deckPosition];
             currentCard++;
         }
         return hand;
     }
+
     public Card dealCard() {
         if (currentCard < deck.length) {
             return deck[currentCard++];
@@ -55,27 +54,51 @@ public class DeckOfCards {
         }
     }
 
-    public static void evaluate(Card[] hand) {
+    public static int evaluateHand(Card[] hand) {
         if (royalFlush(hand) == 1) {
-            System.out.println("This hand has a royal flush");
+            return 1;
         } else if (straightFlush(hand) == 1) {
-            System.out.println("This hand has a straight flush");
+            return 2;
         } else if (fourOfaKind(hand) == 1) {
-            System.out.println("This hand has four of a kind");
+            return 3;
         } else if (fullHouse(hand) == 1) {
-            System.out.println("This hand has a full house");
+            return 4;
         } else if (flush(hand) == 1) {
-            System.out.println("This hand has a flush");
+            return 5;
         } else if (straight(hand) == 1) {
-            System.out.println("This hand has a straight");
+            return 6;
         } else if (triple(hand) == 1) {
-            System.out.println("This hand has a triple");
+            return 7;
         } else if (twoPairs(hand) == 1) {
-            System.out.println("This hand has two pairs");
+            return 8;
         } else if (pair(hand) == 1) {
-            System.out.println("This hand has a pair");
+            return 9;
         } else {
-            System.out.println("This hand's highest card is " + highCard(hand));
+            return 10 + highCard(hand);
+        }
+    }
+    //give player information
+    public static String stateEvaluation(int score,Card[] hand) {
+        if (score == 1) {
+            return "This hand has a royal flush";
+        } else if (score == 2) {
+            return "This hand has a straight flush";
+        } else if (score == 3) {
+            return "This hand has four of a kind";
+        } else if (score == 4) {
+            return "This hand has a full house";
+        } else if (score == 5) {
+            return "This hand has a flush";
+        } else if (score == 6) {
+            return "This hand has a straight";
+        } else if (score == 7) {
+            return "This hand has a triple";
+        } else if (score == 8) {
+            return "This hand has two pairs";
+        } else if (score == 9) {
+            return "This hand has a pair";
+        } else {
+            return "This hand's highest card is " + highCard(hand);
         }
     }
     //Checks if hand has a royalFlush
@@ -111,8 +134,8 @@ public class DeckOfCards {
     }
 
     //Checks if hand has a flush
-    public int flush(Card[] hand){
-        for (int i = 0; i < HAND_SIZE; i++) {
+    public static int flush(Card[] hand){
+        for (int i = 0; i < hand.length; i++) {
             if (hand[i].getSuit().equals(hand[i + 1].getSuit())) {
                 return 1;
             }
