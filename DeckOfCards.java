@@ -4,7 +4,6 @@
 // Source: Deitel/Deitel
 // 01/17/24
 
-import java.security.SecureRandom;
 import java.util.*;
 
 public class DeckOfCards {
@@ -42,7 +41,7 @@ public class DeckOfCards {
 
     public Card[] deal() {
         Card[] hand = new Card[HAND_SIZE];
-        for (int deckPosition = 0; deckPosition < 5; deckPosition++) {
+        for (int deckPosition = 0; deckPosition < HAND_SIZE; deckPosition++) {
             hand[deckPosition] = deck[deckPosition];
             currentCard++;
         }
@@ -112,9 +111,9 @@ public class DeckOfCards {
     }
 
     //Checks if hand has a flush
-    public static int flush(Card[] hand){
-        for (int i = 0; i < 4; i++) {
-            if (hand[i].getSuit() == hand[i + 1].getSuit()) {
+    public int flush(Card[] hand){
+        for (int i = 0; i < HAND_SIZE; i++) {
+            if (hand[i].getSuit().equals(hand[i + 1].getSuit())) {
                 return 1;
             }
         }
@@ -146,9 +145,11 @@ public class DeckOfCards {
     }
 
     //Checks if hand has a pair
-    public static int pair(Card[] hand){
-        if() {
-            return 1;
+    public static int pair(Card[] hand) {
+        for (int i = 0; i < hand.length - 1; i++) {
+            if (hand[i].getFaceValue() == hand[i+1].getFaceValue()){
+                return 1;
+            }
         }
         return 0;
     }
@@ -157,8 +158,8 @@ public class DeckOfCards {
     public static int highCard(Card[] hand) {
         int highCard = 0;
         for (int count = 0; count < 5; count++) {
-            if (hand[count].getFace() > highCard) {
-                highCard = hand[count].getFace();
+            if (hand[count].getFaceValue() > highCard) {
+                highCard = hand[count].getFaceValue();
             }
         }
         return highCard;
