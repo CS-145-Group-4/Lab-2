@@ -5,29 +5,39 @@
 
 import java.util.*;
 
+//This program will run a poker card game between a player and a dealer.
 public class CardGame {
+    public static int PLAYER_WINS = 0;
+    public static int DEALER_WINS = 0;
+    public static int TIES = 0;
+    //This method will create a scanner for input, introduce the game, and run the game.
     public static void main(String[] args) {
         Scanner console = new Scanner(System.in);
         System.out.println("This is a console based poker game");
         game(console);
     }
 
+    //this method runs the poker game, looping until player says they don't want to play anymore into the console.
+    //creates a new hand for both the dealer and player, outputs the players hand, and tells what they drew,
+    //and if their hand beat the dealers hand.
+    //at the end of the hands dealt, outputs the statistics for the hands played.
     public static void game(Scanner console) {
         String response = "y";
-        int dealerWins = 0;
-        int playerWins = 0;
-        int ties= 0;
         while (!response.equals("n")) {
             DeckOfCards gameDeck = new DeckOfCards();
             gameDeck.shuffle();
             int handSize = 5;
 
+
             //deal hands
             Card[] dealerHand = gameDeck.dealHand(handSize);
+            //swap for method using card.
+            //compare to swap cards around using for method like shuffle
             Arrays.sort(dealerHand);
-            int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
 
             Card[] playerHand = gameDeck.dealHand(handSize);
+            //swap for method using card.
+            //compare to swap cards around using for method like shuffle
             Arrays.sort(playerHand);
             int playerHandScore = DeckOfCards.evaluateHand(playerHand);
             System.out.println(DeckOfCards.stateEvaluation(playerHandScore, playerHand));
@@ -36,58 +46,45 @@ public class CardGame {
                 System.out.println(card);
             }
 
-            //add if player wants to change card function
-            //add if deal return null, reshuffle deck
-            //ensure if reshuffle happens, players hands don't change. ie hand array is pointing to deck array position
-            //instead of taking a copy of values and returning it.
-            //Ensure player hand contents aren't being added back into deck,
-            //IE deck size now smaller, card values in hands not reappearing in deck.
-
-            //clean this up raymond!
-            //Compare dealer hand vs player hand result
-            if (dealerHandScore < playerHandScore) {
-                System.out.println("Dealer Wins");
-                dealerWins++;
-            } else if (playerHandScore < dealerHandScore) {
-                System.out.println("Player Wins");
-                playerWins++;
-                //add if straight is better than other hands straight
-            } else if (playerHandScore == 6) {
-                if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
-                    System.out.println("It's a tie!");
-                    ties++;
-                } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)){
-                    System.out.println("Player Wins");
-                    playerWins++;
-                } else {
-                    System.out.println("Dealer Wins");
-                    dealerWins++;
-                }
-            } else if (playerHandScore == 10) {
-                if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
-                    System.out.println("It's a tie!");
-                    ties++;
-                } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand))
-                    System.out.println("Player Wins");
-                    playerWins++;
-                } else {
-                    System.out.println("Dealer Wins");
-                    dealerWins++;
-            }
-
-
-
+            winMessage(dealerHand,playerHand);
+            //Ask player if they would like to play again using while statement for proper input
             System.out.println("Would you like to play again? (Y/N)");
-            while (!((response.equals("n") || (response.equals("y"))))) {
-                System.out.println("Invalid input -- Try again");
-                response = console.next();
-            }
             response = console.next();
+            while (!response.equalsIgnoreCase("n") || !response.equalsIgnoreCase("y")){
+                System.out.println("Invalid input -- Try again");
+                response = console.next().substring(0,1);
+            }
         }
 
+
+    }
+
+    public static void winMessage(Card[] dealerHand,Card[] playerHand){
+        int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
+        int playerHandScore = DeckOfCards.evaluateHand(playerHand);
+        if (dealerHandScore < playerHandScore) {
+            System.out.println("Dealer Wins");
+            DEALER_WINS++;
+        } else if (playerHandScore < dealerHandScore) {
+            System.out.println("Player Wins");
+            PLAYER_WINS++;
+        } else if (playerHandScore == 6 || playerHandScore == 10) {
+            if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
+                System.out.println("It's a tie!");
+                TIES++;
+            } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)) {
+                System.out.println("Player Wins");
+                PLAYER_WINS++;
+            } else {
+                System.out.println("Dealer Wins");
+                DEALER_WINS++;
+            }
+        } // todo matching scores of 1,2,3,4,5,7,8,9
+
         //Game results
-        System.out.println("The dealer won " + dealerWins + "times.");
-        System.out.println("The player won " + playerWins + "times.");
-        System.out.println("The player and dealer tied " + ties + "times");
+        System.out.println("Game Results");
+        System.out.printf("/t%-13s = %d%n", "Dealer Wins", DEALER_WINS);
+        System.out.printf("/t%-13s = %d%n", "Player Wins", PLAYER_WINS);
+        System.out.printf("/t%-13s = %d%n", "Total Ties", TIES);
     }
 }
