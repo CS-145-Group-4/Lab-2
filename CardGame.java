@@ -14,6 +14,9 @@ public class CardGame {
 
     public static void game(Scanner console) {
         String response = "y";
+        int dealerWins = 0;
+        int playerWins = 0;
+        int ties= 0;
         while (!response.equals("n")) {
             DeckOfCards gameDeck = new DeckOfCards();
             gameDeck.shuffle();
@@ -40,17 +43,36 @@ public class CardGame {
             //Ensure player hand contents aren't being added back into deck,
             //IE deck size now smaller, card values in hands not reappearing in deck.
 
+            //clean this up raymond!
             //Compare dealer hand vs player hand result
-            if (dealerHandScore > playerHandScore) {
+            if (dealerHandScore < playerHandScore) {
                 System.out.println("Dealer Wins");
-            } else if (playerHandScore > dealerHandScore) {
+                dealerWins++;
+            } else if (playerHandScore < dealerHandScore) {
                 System.out.println("Player Wins");
+                playerWins++;
+                //add if straight is better than other hands straight
+            } else if (playerHandScore == 6) {
+                if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
+                    System.out.println("It's a tie!");
+                    ties++;
+                } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)){
+                    System.out.println("Player Wins");
+                    playerWins++;
+                } else {
+                    System.out.println("Dealer Wins");
+                    dealerWins++;
+                }
             } else if (playerHandScore == 10) {
                 if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                     System.out.println("It's a tie!");
+                    ties++;
+                } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand))
+                    System.out.println("Player Wins");
+                    playerWins++;
                 } else {
-                    System.out.print(DeckOfCards.highCard(playerHand) > DeckOfCards.highCard(dealerHand) ? "Player Wins" : "Dealer Wins");
-                }
+                    System.out.println("Dealer Wins");
+                    dealerWins++;
             }
 
 
@@ -62,5 +84,10 @@ public class CardGame {
             }
             response = console.next();
         }
+
+        //Game results
+        System.out.println("The dealer won " + dealerWins + "times.");
+        System.out.println("The player won " + playerWins + "times.");
+        System.out.println("The player and dealer tied " + ties + "times");
     }
 }
