@@ -38,6 +38,10 @@ public class Card {
       return this.suitValue;
    }
 
+   public void compareValue(Card this, Card other) {
+    
+   }
+
    private int setFaceValue() {
        switch (this.face) {
            case "Ace":

@@ -64,8 +64,8 @@ public class DeckOfCards {
             return 2;
         } else if (kindCount(hand) == 3) {
             return 3;
-        } else if (fullHouse(hand) == 1) {
-            return 4;
+        // } else if (fullHouse(hand) == 1) {
+        //     return 4;
         } else if (kindCount(hand) == 2) {
             return 5;
         } else if (straight(hand) == 1) {
@@ -120,19 +120,26 @@ public class DeckOfCards {
         return 0;
     }
 
-    //Checks if hand has a fullHouse
-    public static int fullHouse(Card[] hand){
-        if() {
+    public int isFlush(Card[] hand) { // all cards of same suit, do not have to be consecutive
+        if ((kindCount(hand) == 3) && (straightFlush(hand) == 0)) {
             return 1;
         }
         return 0;
     }
 
+    //Checks if hand has a fullHouse
+    // public static int fullHouse(Card[] hand){
+    //     if() {
+    //         return 1;
+    //     }
+    //     return 0;
+    // }
+
     //Checks if hand has a straight
     public static int straight(Card[] hand) {
         int linearCount = 0;
         for (int i = 0; i < hand.length - 1; i++) {
-            if (hand[i].getFaceValue() == hand[i + 1].getFaceValue()) {
+            if ((hand[i].getFaceValue() + 1) == hand[i + 1].getFaceValue()) {
                 linearCount++;
             }
         } if (linearCount == 4) {
@@ -150,16 +157,46 @@ public class DeckOfCards {
         }
         return kindCount;
     }
+    
+    // checks if hand has a three of a kind
+    public static int threeOfAKind(Card[] hand) {
+        int count = 1;
+        // checks equivalence between current card starting at index 1
+        // against all cards in the indices below it
+        // hopefully
+        for (int x = 1; x < hand.length; x++) {
+            for (int y = 0; y < x; y++) {
+                if(hand[x].getFace().equals(hand[y].getFace())) {
+                    count++;
+                }
+            }
+            if (count == 3) {
+                return 1;
+            }
+        }
+        return 0;
+    }
 
-    //Checks if hand has one or two pairs
+    // I might mess with this since for a full house we'll have to differentiate
+    // the face values for the three of a kind and the pair
+
+    // Checks if hand has one or two pairs
     public static int pair(Card[] hand) {
         int pairCounter = 0;
         for (int i = 0; i < hand.length - 1; i++) {
             if (hand[i].getFaceValue() == hand[i + 1].getFaceValue()) {
                 pairCounter++;
+                // pair counter will increment if three of a kind, hand[i + 2] equals the previous cards
+                // there's not a great way to keep track of the face value of the card that is in a pair
+                // I have no idea how we track that for full house or two separate pairs since we have to compare face value
+                // might write comparison method in Card class
+                // could write set method in this file for each type
             }
         }
         return pairCounter;
+        // I would not enjoy having to write separate methods for two pairs and four of a kind
+        // but kind of at a loss on how we'd do it
+        // wondering about enums since they were introduced, but I really don't understand them well
     }
 
     //Finds hands highest card
