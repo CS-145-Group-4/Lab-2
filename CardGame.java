@@ -14,6 +14,7 @@ public class CardGame {
     public static void main(String[] args) {
         Scanner console = new Scanner(System.in);
         System.out.println("This is a console based poker game");
+        System.out.println();
         game(console);
     }
 
@@ -22,41 +23,48 @@ public class CardGame {
     //and if their hand beat the dealers hand.
     //at the end of the hands dealt, outputs the statistics for the hands played.
     public static void game(Scanner console) {
-        String response = "y";
-        while (!response.equals("n")) {
+        int keepPlaying = 3;
+        while (keepPlaying != 0) {
             DeckOfCards gameDeck = new DeckOfCards();
             gameDeck.shuffle();
             int handSize = 5;
 
-
             //deal hands
             Card[] dealerHand = gameDeck.dealHand(handSize);
-            //swap for method using card.
-            //compare to swap cards around using for method like shuffle
             Arrays.sort(dealerHand);
-
             Card[] playerHand = gameDeck.dealHand(handSize);
-            //swap for method using card.
-            //compare to swap cards around using for method like shuffle
+
             Arrays.sort(playerHand);
+
+            int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
+            System.out.println(DeckOfCards.stateEvaluation(dealerHandScore));
+            System.out.println("Dealer Hand:");
+            for (Card card : dealerHand) {
+                System.out.println(card);
+            }
+            System.out.println();
+
+            int playerHandScore = DeckOfCards.evaluateHand(playerHand);
+            System.out.println(DeckOfCards.stateEvaluation(playerHandScore));
             System.out.println("Player Hand:");
             for (Card card : playerHand) {
                 System.out.println(card);
             }
             System.out.println();
-
-// can also comment this out later but would like to see the dealer hand
-            for (Card card : dealerHand) {
-                System.out.println(card);
-            }
-
+            gameDeck.shuffle();
             winMessage(dealerHand,playerHand);
+            keepPlaying = 3;
             //Ask player if they would like to play again using while statement for proper input
-            System.out.println("Would you like to play again? (Y/N)");
-            response = console.next();
-            while (!response.equalsIgnoreCase("y")){
-                System.out.println("Invalid input -- Try again");
-                response = console.next().substring(0,1);
+            System.out.println("Would you like to play a game? (Y/N)");
+            while (keepPlaying != 1 && keepPlaying != 0 ) {
+                String response = console.next().substring(0, 1);
+                if (response.equalsIgnoreCase("N")) {
+                    keepPlaying = 0;
+                } else if (response.equalsIgnoreCase("Y")) {
+                    keepPlaying = 1;
+                } else {
+                    System.out.println("Invalid input -- Try again");
+                }
             }
         }
 
@@ -66,31 +74,24 @@ public class CardGame {
     public static void winMessage(Card[] dealerHand,Card[] playerHand){
         int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
         int playerHandScore = DeckOfCards.evaluateHand(playerHand);
-        // bunch of stuff to print
-        System.out.println(playerHandScore);
-        System.out.println(dealerHandScore);
-        DeckOfCards.stateEvaluation(playerHandScore, playerHand);
-        DeckOfCards.stateEvaluation(dealerHandScore, dealerHand);
-        // if scores are equal and winner depends on high card
-
         if (dealerHandScore < playerHandScore) {
             System.out.println("Dealer Wins");
             DEALER_WINS++;
         } else if (playerHandScore < dealerHandScore) {
             System.out.println("Player Wins");
             PLAYER_WINS++;
-        } else if (playerHandScore == 6 || playerHandScore == 10) {
+        } else if (playerHandScore == 5 || playerHandScore == 9 || playerHandScore == 1) {
             if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                 System.out.println("It's a tie!");
                 TIES++;
-            } else if (DeckOfCards.highCard(playerHand) > DeckOfCards.highCard(dealerHand)) {
+            } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)) {
                 System.out.println("Player Wins");
                 PLAYER_WINS++;
             } else {
                 System.out.println("Dealer Wins");
                 DEALER_WINS++;
             }
-        } // todo matching scores of 1,2,3,4,5,7,8,9
+        } // todo matching scores of 1,2,3,4,6,7,8,
 
         //Game results
         System.out.println("Game Results");
