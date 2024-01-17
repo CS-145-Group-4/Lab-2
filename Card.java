@@ -1,21 +1,27 @@
 // Raymond Daniels, Mali Brunk
 // CS 145
 // Lab 2: Card Shuffling and Dealing
-// Source: Deitel/Deitel
 // 01/17/24
 
-// This is basically what the book has with the addition of getFace and getSuit
-public class Card {
-   private String face;
-   private String suit;
-   private int faceValue;
-   private int suitValue;
+public class Card implements Comparable<Card>{
+   private final String face;
+   private final String suit;
+   private final int faceValue;
    
    public Card(String face, String suit){
       this.face = face;
       this.suit = suit;
       this.faceValue = setFaceValue();
-      this.suitValue = setSuitValue();
+   }
+
+   @Override
+   public int compareTo(Card other) {
+        if (this.faceValue < other.faceValue) {
+            return -1;
+        } else if (this.faceValue > other.faceValue) {
+            return 1;
+        }
+        return 0;
    }
 
    public String getFace() {
@@ -32,14 +38,6 @@ public class Card {
 
    public int getFaceValue() {
       return this.faceValue;
-   }
-
-   public int getSuitValue() {
-      return this.suitValue;
-   }
-
-   public void compareValue(Card this, Card other) {
-    
    }
 
    private int setFaceValue() {
@@ -70,18 +68,6 @@ public class Card {
                return 12;
            default:
                return 13;
-       }
-   }
-   private int setSuitValue() {
-       switch (this.face) {
-           case "Hearts":
-               return 1;
-           case "Diamonds":
-               return 2;
-           case "Clubs":
-               return 3;
-           default:
-               return 4;
        }
    }
 }

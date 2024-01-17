@@ -7,7 +7,7 @@ import java.util.*;
 
 public class DeckOfCards {
     private static final int NUMBER_OF_CARDS = 52;
-    private Card[] deck; // Initializes array of card objects
+    private final Card[] deck; // Initializes array of card objects
     private int currentCard; // Index of next card to be dealt
 
 
@@ -41,7 +41,7 @@ public class DeckOfCards {
     public Card[] dealHand(int handSize) {
         Card[] hand = new Card[handSize];
         for (int deckPosition = 0; deckPosition < handSize; deckPosition++) {
-            hand[deckPosition] = deck[deckPosition];
+            hand[deckPosition] = deck[currentCard];
             currentCard++;
         }
         return hand;
@@ -50,7 +50,9 @@ public class DeckOfCards {
     //deals a single card and increments CurrentCard
     public Card dealCard() {
         if (currentCard < deck.length) {
-            return deck[currentCard++];
+            Card card = deck[currentCard];
+            currentCard++;
+            return card;
         } else {
             return null;
         }
@@ -104,6 +106,7 @@ public class DeckOfCards {
             return "This hand's highest card is " + highCard(hand);
         }
     }
+
     //Checks if hand has a royalFlush
     public static int royalFlush(Card[] hand) {
         if(highCard(hand) == 1 && straightFlush(hand) == 1 ) {
@@ -114,7 +117,7 @@ public class DeckOfCards {
 
     //Checks if hand has a straightFlush
     public static int straightFlush(Card[] hand){
-        if(straight(hand) == 1 && kindCount(hand) == 3) {
+        if(straight(hand) == 1 && kindCount(hand) == 4) {
             return 1;
         }
         return 0;
@@ -148,6 +151,7 @@ public class DeckOfCards {
     }
 
     //checks how many cards in a hand have the same suit
+    //kindcount 2 = 3ofakind, 3  = fourofakind, 4 = flush
     public static int kindCount(Card[] hand) {
         int kindCount = 0;
         for (int i = 0; i < hand.length - 2; i++) {
