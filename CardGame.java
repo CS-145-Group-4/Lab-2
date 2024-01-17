@@ -37,14 +37,24 @@ public class CardGame {
 
             int dealerHandScore = evaluateHand(dealerHand);
             System.out.println(stateEvaluation(dealerHandScore));
+            //deal hands
+            Card[] dealerHand = gameDeck.dealHand(handSize);
+            Arrays.sort(dealerHand);
+            Card[] playerHand = gameDeck.dealHand(handSize);
+
+            Arrays.sort(playerHand);
+
+            int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
+            System.out.println(DeckOfCards.stateEvaluation(dealerHandScore));
+
             System.out.println("Dealer Hand:");
             for (Card card : dealerHand) {
                 System.out.println(card);
             }
             System.out.println();
 
-            int playerHandScore = evaluateHand(playerHand);
-            System.out.println(stateEvaluation(playerHandScore));
+            int playerHandScore = DeckOfCards.evaluateHand(playerHand);
+            System.out.println(DeckOfCards.stateEvaluation(playerHandScore));
             System.out.println("Player Hand:");
             for (Card card : playerHand) {
                 System.out.println(card);
@@ -68,27 +78,27 @@ public class CardGame {
         }
     }
 
-    //tells the player who won and their current statistics for all games played
-    public static void winMessage(Card[] dealerHand,Card[] playerHand) {
-        int dealerHandScore = evaluateHand(dealerHand);
-        int playerHandScore = evaluateHand(playerHand);
+    public static void winMessage(Card[] dealerHand,Card[] playerHand){
+        int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
+        int playerHandScore = DeckOfCards.evaluateHand(playerHand);
         if (dealerHandScore < playerHandScore) {
             System.out.println("Dealer Wins");
             DEALER_WINS++;
         } else if (playerHandScore < dealerHandScore) {
             System.out.println("Player Wins");
             PLAYER_WINS++;
-        } else if (playerHandScore == 5 || playerHandScore == 9) {
-            if (highCard(playerHand) == highCard(dealerHand)) {
+        } else if (playerHandScore == 5 || playerHandScore == 9 || playerHandScore == 1) {
+            if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                 System.out.println("It's a tie!");
                 TIES++;
-            } else if (highCard(playerHand) < highCard(dealerHand)) {
+            } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)) {
                 System.out.println("Player Wins");
                 PLAYER_WINS++;
             } else {
                 System.out.println("Dealer Wins");
                 DEALER_WINS++;
             }
+        } // todo matching scores of 1,2,3,4,6,7,8,
 
         //the following should have the same format as above matching scores.
         //code cleanliness means this should probably be broken into its own methods for each of these matching ones
