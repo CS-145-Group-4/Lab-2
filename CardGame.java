@@ -21,7 +21,7 @@ public class CardGame {
     //this method runs the poker game, looping until player says they don't want to play anymore into the console.
     //creates a new hand for both the dealer and player, outputs the players hand, and tells what they drew,
     //and if their hand beat the dealers hand.
-    //at the end of the hands dealt, outputs the statistics for the hands played.
+    //at the end of each hand, shows statistics
     public static void game(Scanner console) {
         int keepPlaying = 3;
         while (keepPlaying != 0) {
@@ -51,7 +51,7 @@ public class CardGame {
                 System.out.println(card);
             }
             System.out.println();
-
+            gameDeck.shuffle();
             winMessage(dealerHand,playerHand);
             keepPlaying = 3;
             //Ask player if they would like to play again using while statement for proper input
@@ -67,10 +67,9 @@ public class CardGame {
                 }
             }
         }
-
-
     }
 
+    //tells the player who won and their current statistics for all games played
     public static void winMessage(Card[] dealerHand,Card[] playerHand){
         int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
         int playerHandScore = DeckOfCards.evaluateHand(playerHand);
@@ -80,7 +79,7 @@ public class CardGame {
         } else if (playerHandScore < dealerHandScore) {
             System.out.println("Player Wins");
             PLAYER_WINS++;
-        } else if (playerHandScore == 5 || playerHandScore == 9 || playerHandScore == 1) {
+        } else if (playerHandScore == 5 || playerHandScore == 9) {
             if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                 System.out.println("It's a tie!");
                 TIES++;
@@ -91,7 +90,39 @@ public class CardGame {
                 System.out.println("Dealer Wins");
                 DEALER_WINS++;
             }
-        } // todo matching scores of 1,2,3,4,6,7,8,
+            /*
+        //the following should have the same format as above matching scores.
+        //code cleanliness means this should probably be broken into its own methods for each of these matching ones
+        //instead of having a super long chain of if else
+        } else if (playerHandScore == 1){
+            // if contains ace and king, and other contains ace and king, or high card match = tie
+            // else high card = win
+        } else if (playerHandScore == 2) {
+            // compare 4 and 5 for each hand. if 4 and 5 match, value of either. if not value of lower.
+            //compare to other hand
+        } else if (playerHandScore == 3) {
+            // same as above, but with 3 cards.
+        } else if (playerHandScore == 4) {
+            //Each flush is ranked first by the rank of its highest-ranking card,
+            // then by the rank of its second highest-ranking card,
+            // then by the rank of its third highest-ranking card,
+            // then by the rank of its fourth highest-ranking card,
+            // then by the rank of its lowest-ranking card.
+        } else if (playerHandScore == 6) {
+            // for each hand compare highest 3 cards. If match 3 cards match, compare to other hands
+            // if 2 match, compare that to other hands.
+            // if none, lowest compared to other hand
+        } else if (playerHandScore == 7) {
+            //Each two pair is ranked first by the rank of its higher-ranking pair,
+            //then by the rank of its lower-ranking pair,
+            //and finally by the rank of its last card
+        } else if (playerHandScore == 8) {
+            //Each one pair is ranked first by the rank of its pair,
+            // then by the rank of its highest-ranking kicker,
+            // then by the rank of its second highest-ranking kicker,
+            // and finally by the rank of its lowest-ranking kicker.
+        }
+             */
 
         //Game results
         System.out.println("Game Results");
