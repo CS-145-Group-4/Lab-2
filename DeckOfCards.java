@@ -37,7 +37,7 @@ public class DeckOfCards {
         }
     }
 
-    //deals
+    //deals a hand and increments deck position
     public Card[] dealHand(int handSize) {
         Card[] hand = new Card[handSize];
         for (int deckPosition = 0; deckPosition < handSize; deckPosition++) {
@@ -60,82 +60,112 @@ public class DeckOfCards {
 
     //calculate hands score
     public static int evaluateHand(Card[] hand) {
-        if (royalFlush(hand) == 1) {
-            return 1;
-        } else if (straightFlush(hand) == 1) {
-            return 2;
-        } else if (kindCount(hand) == 3) {
-            return 3;
-        } else if (fullHouse(hand) == 1) {
-            return 4;
-        } else if (kindCount(hand) == 2) {
-            return 5;
+        if (straight(hand) == 1 && flushCheck(hand) ==1) {
+            return 1; //straight flush
+        }else if (kindCount(hand) == 3) {
+            return 2; // 4 of a kind
+        } else if (sameCheck(hand) == 5) {
+            return 3; // full house
+        } else if (flushCheck(hand) == 1) {
+            return 4; // flush
         } else if (straight(hand) == 1) {
-            return 6;
-        } else if (kindCount(hand) == 1) {
-            return 7;
-        } else if (pair(hand) == 2) {
-            return 8;
-        } else if (pair(hand) == 1) {
-            return 9;
+            return 5; // straight
+        } else if (sameCheck(hand) == 3) {
+            return 6; // 3 of a kind
+        } else if (kindCount(hand) == 2) {
+            return 7; // 2 pair
+        } else if (sameCheck(hand) == 2) {
+            return 8; // 1 pair
         } else {
-            return 10 + highCard(hand);
-        }
-    }
-    //gives player information
-    public static String stateEvaluation(int score,Card[] hand) {
-        if (score == 1) {
-            return "This hand has a royal flush";
-        } else if (score == 2) {
-            return "This hand has a straight flush";
-        } else if (score == 3) {
-            return "This hand has four of a kind";
-        } else if (score == 4) {
-            return "This hand has a full house";
-        } else if (score == 5) {
-            return "This hand has a flush";
-        } else if (score == 6) {
-            return "This hand has a straight";
-        } else if (score == 7) {
-            return "This hand has a triple";
-        } else if (score == 8) {
-            return "This hand has two pairs";
-        } else if (score == 9) {
-            return "This hand has a pair";
-        } else {
-            return "This hand's highest card is " + highCard(hand);
+            return 9; //highCard
         }
     }
 
-    //Checks if hand has a royalFlush
-    public static int royalFlush(Card[] hand) {
-        if(highCard(hand) == 1 && straightFlush(hand) == 1 ) {
-            return 1;
+    public static String stateEvaluation(int score) {
+        switch(score) {
+            case 1:
+                return "This hand has a straight flush";
+            case 2:
+                return "This hand has four of a kind";
+            case 3:
+                return "This hand has a full house";
+            case 4:
+                return "This hand has a flush";
+            case 5:
+                return "This hand has a straight";
+            case 6:
+                return "This hand has three of a kind";
+            case 7:
+                return "This hand has two pairs";
+            case 8:
+                return "This hand has a pair";
+            default:
+                return "This hand only has a high card";
         }
-        return 0;
     }
 
-    //Checks if hand has a straightFlush
-    public static int straightFlush(Card[] hand){
-        if(straight(hand) == 1 && kindCount(hand) == 4) {
-            return 1;
-        }
-        return 0;
-    }
+    //Checks if hand has multiple of the same cards.
+    public static int sameCheck(Card[] hand){
+        boolean foundTwoPair = false;
+        boolean foundFull = false;
+        boolean foundFourOfKind = false;
+        boolean foundThreeOfKind = false;
+        boolean foundPair = false;
 
-    //Checks if hand has a fullHouse
-    public static int fullHouse(Card[] hand){
-        if() {
-            return 1;
+        for (int first = 0; first < hand.length - 3; first++) {
+            for (int second = first+1; second < hand.length - 2; second++) {
+                for (int third = second+1; third < hand.length - 1; third++) {
+                    for (int fourth  = third +1; fourth < hand.length; fourth++) {
+                        if (hand[first].getFaceValue() == hand[second].getFaceValue() &&
+                                hand[first].getFaceValue() == hand[third].getFaceValue() &&
+                                hand[first].getFaceValue() == hand[fourth].getFaceValue()) {
+                            foundFourOfKind = true;
+                        }
+                        if (hand[first].getFaceValue() == hand[second].getFaceValue() &&
+                                hand[first].getFaceValue() == hand[third].getFaceValue()) {
+                            foundThreeOfKind = true;
+                        }
+                        boolean highPair = hand[fourth].getFaceValue() == hand[fourth + 1].getFaceValue();
+                        if (foundThreeOfKind && highPair) {
+                            foundFull = true;
+                        }
+                        if (hand[first].getFaceValue() == hand[second].getFaceValue()) {
+                            foundPair = true;
+                        }
+                        if (!foundFourOfKind && foundPair && (hand[third].getFaceValue() == hand[fourth].getFaceValue()) ||
+                        (highPair)){
+                            foundTwoPair = true;
+                        }
+                    }
+                }
+            }
         }
-        return 0;
+        if (foundFull) {
+            return 5;
+        } else if (foundFourOfKind) {
+            return 4;
+        } else if (foundThreeOfKind){
+            return 3;
+        } else if (foundTwoPair) {
+            return 2;
+        } else if (foundPair)
+            return 1;
+        else {
+            return 0;
+        }
     }
 
     //Checks if hand has a straight
+    //need to ensure straights with aces high works. aces low works.
     public static int straight(Card[] hand) {
         int linearCount = 0;
         for (int i = 0; i < hand.length - 1; i++) {
-            if (hand[i].getFaceValue() == hand[i + 1].getFaceValue()) {
+            if (hand[i].getFaceValue() == 1 && hand[i + 1].getFaceValue() == 13) {
+                linearCount++;
+            } else if (hand[i].getFaceValue() == hand[i + 1].getFaceValue() - 1) {
+                linearCount++;
+            }
+            if (hand[i].getFaceValue() == hand[i + 1].getFaceValue() - 1) {
                 linearCount++;
             }
         } if (linearCount == 4) {
@@ -143,27 +173,31 @@ public class DeckOfCards {
         } else return 0;
     }
 
-    //checks how many cards in a hand have the same suit
-    //kindcount 2 = 3ofakind, 3  = fourofakind, 4 = flush
+    //checks if hand contains a flush
+    public static int flushCheck(Card[] hand) {
+        int suitCount = 0;
+        for (int i = 0; i < hand.length - 1; i++) {
+            if (hand[i].getSuit().equals(hand[i + 1].getSuit())) {
+                suitCount++;
+            }
+        }
+        if (suitCount == 4) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
+    //kindCount 2 = three of a kind, 3  = four of a kind
     public static int kindCount(Card[] hand) {
         int kindCount = 0;
-        for (int i = 0; i < hand.length - 2; i++) {
-            if ((hand[i].getSuit().equals(hand[i + 1].getSuit())) && (hand[i].getSuit().equals(hand[i + 2].getSuit()))) {
+        for (int i = 0; i < hand.length - 1; i++) {
+            if (hand[i].getFaceValue() == hand[i + 1].getFaceValue()) {
                 kindCount++;
             }
         }
         return kindCount;
-    }
-
-    //Checks if hand has one or two pairs
-    public static int pair(Card[] hand) {
-        int pairCounter = 0;
-        for (int i = 0; i < hand.length - 1; i++) {
-            if (hand[i].getFaceValue() == hand[i + 1].getFaceValue()) {
-                pairCounter++;
-            }
-        }
-        return pairCounter;
     }
 
     //Finds hands highest card
