@@ -29,51 +29,30 @@ public class CardGame {
             gameDeck.shuffle();
             int handSize = 5;
 
-            //deals and sorts hands
-            Card[] dealerHand = gameDeck.dealHand(handSize);
-            Arrays.sort(dealerHand);
-            Card[] playerHand = gameDeck.dealHand(handSize);
-            Arrays.sort(playerHand);
-
-            int dealerHandScore = evaluateHand(dealerHand);
-            System.out.println(stateEvaluation(dealerHandScore));
             //deal hands
             Card[] dealerHand = gameDeck.dealHand(handSize);
             Arrays.sort(dealerHand);
             Card[] playerHand = gameDeck.dealHand(handSize);
 
             Arrays.sort(playerHand);
-
-            int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
-            System.out.println(DeckOfCards.stateEvaluation(dealerHandScore));
-
-            System.out.println("Dealer Hand:");
-            for (Card card : dealerHand) {
-                System.out.println(card);
-            }
-            System.out.println();
-
-            int playerHandScore = DeckOfCards.evaluateHand(playerHand);
-            System.out.println(DeckOfCards.stateEvaluation(playerHandScore));
             System.out.println("Player Hand:");
             for (Card card : playerHand) {
                 System.out.println(card);
             }
             System.out.println();
-            gameDeck.shuffle();
+
+// can also comment this out later but would like to see the dealer hand
+            for (Card card : dealerHand) {
+                System.out.println(card);
+            }
+
             winMessage(dealerHand,playerHand);
-            keepPlaying = 3;
             //Ask player if they would like to play again using while statement for proper input
-            System.out.println("Would you like to play a game? (Y/N)");
-            while (keepPlaying != 1 && keepPlaying != 0 ) {
-                String response = console.next().substring(0, 1);
-                if (response.equalsIgnoreCase("N")) {
-                    keepPlaying = 0;
-                } else if (response.equalsIgnoreCase("Y")) {
-                    keepPlaying = 1;
-                } else {
-                    System.out.println("Invalid input -- Try again");
-                }
+            System.out.println("Would you like to play again? (Y/N)");
+            response = console.next();
+            while (!response.equalsIgnoreCase("y")){
+                System.out.println("Invalid input -- Try again");
+                response = console.next().substring(0,1);
             }
         }
     }
@@ -87,62 +66,18 @@ public class CardGame {
         } else if (playerHandScore < dealerHandScore) {
             System.out.println("Player Wins");
             PLAYER_WINS++;
-        } else if (playerHandScore == 5 || playerHandScore == 9 || playerHandScore == 1) {
+        } else if (playerHandScore == 6 || playerHandScore == 10) {
             if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                 System.out.println("It's a tie!");
                 TIES++;
-            } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)) {
+            } else if (DeckOfCards.highCard(playerHand) > DeckOfCards.highCard(dealerHand)) {
                 System.out.println("Player Wins");
                 PLAYER_WINS++;
             } else {
                 System.out.println("Dealer Wins");
                 DEALER_WINS++;
             }
-        } // todo matching scores of 1,2,3,4,6,7,8,
-
-        //the following should have the same format as above matching scores.
-        //code cleanliness means this should probably be broken into its own methods for each of these matching ones
-        //instead of having a super long chain of if else
-        } else if (playerHandScore == 1){
-            // if contains ace and king, and other contains ace and king, or high card match = tie
-            // else high card = win
-            for (Card each : playerHand) {
-                if (playerHand[each].getFaceValue() == 1 && dealerHand[each].getFaceValue() == 1){
-
-                }
-            }
-        } else if (playerHandScore == 2) {
-            // compare 4 and 5 for each hand. if 4 and 5 match, value of either. if not value of lower.
-            //compare to other hand
-
-        } else if (playerHandScore == 3) {
-            // same as above, but with 3 cards.
-
-        } else if (playerHandScore == 4) {
-            //Each flush is ranked first by the rank of its highest-ranking card,
-            // then by the rank of its second highest-ranking card,
-            // then by the rank of its third highest-ranking card,
-            // then by the rank of its fourth highest-ranking card,
-            // then by the rank of its lowest-ranking card.
-
-        } else if (playerHandScore == 6) {
-            // for each hand compare highest 3 cards. If match 3 cards match, compare to other hands
-            // if 2 match, compare that to other hands.
-            // if none, lowest compared to other hand
-
-        } else if (playerHandScore == 7) {
-            //Each two pair is ranked first by the rank of its higher-ranking pair,
-            //then by the rank of its lower-ranking pair,
-            //and finally by the rank of its last card
-
-        } else if (playerHandScore == 8) {
-            //Each one pair is ranked first by the rank of its pair,
-            // then by the rank of its highest-ranking kicker,
-            // then by the rank of its second highest-ranking kicker,
-            // and finally by the rank of its lowest-ranking kicker.
-
-        }
-
+        } // todo matching scores of 1,2,3,4,5,7,8,9
 
             //Game results
             System.out.println("Game Results");
