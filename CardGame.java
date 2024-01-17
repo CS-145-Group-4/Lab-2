@@ -28,23 +28,28 @@ public class CardGame {
             gameDeck.shuffle();
             int handSize = 5;
 
-
             //deal hands
             Card[] dealerHand = gameDeck.dealHand(handSize);
-            //swap for method using card.
-            //compare to swap cards around using for method like shuffle
             Arrays.sort(dealerHand);
-
             Card[] playerHand = gameDeck.dealHand(handSize);
-            //swap for method using card.
-            //compare to swap cards around using for method like shuffle
+
             Arrays.sort(playerHand);
+
+            int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
+            System.out.println(DeckOfCards.stateEvaluation(dealerHandScore));
+            System.out.println("Dealer Hand:");
+            for (Card card : dealerHand) {
+                System.out.println(card);
+            }
+            System.out.println();
+
             int playerHandScore = DeckOfCards.evaluateHand(playerHand);
-            System.out.println(DeckOfCards.stateEvaluation(playerHandScore, playerHand));
+            System.out.println(DeckOfCards.stateEvaluation(playerHandScore));
             System.out.println("Player Hand:");
             for (Card card : playerHand) {
                 System.out.println(card);
             }
+            System.out.println();
 
             winMessage(dealerHand,playerHand);
             //Ask player if they would like to play again using while statement for proper input
@@ -68,7 +73,7 @@ public class CardGame {
         } else if (playerHandScore < dealerHandScore) {
             System.out.println("Player Wins");
             PLAYER_WINS++;
-        } else if (playerHandScore == 6 || playerHandScore == 10) {
+        } else if (playerHandScore == 5 || playerHandScore == 9 || playerHandScore == 1) {
             if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                 System.out.println("It's a tie!");
                 TIES++;
@@ -79,12 +84,12 @@ public class CardGame {
                 System.out.println("Dealer Wins");
                 DEALER_WINS++;
             }
-        } // todo matching scores of 1,2,3,4,5,7,8,9
+        } // todo matching scores of 1,2,3,4,6,7,8,
 
         //Game results
         System.out.println("Game Results");
-        System.out.printf("/t%-13s = %d%n", "Dealer Wins", DEALER_WINS);
-        System.out.printf("/t%-13s = %d%n", "Player Wins", PLAYER_WINS);
-        System.out.printf("/t%-13s = %d%n", "Total Ties", TIES);
+        System.out.printf("\t%-13s = %d%n", "Dealer Wins", DEALER_WINS);
+        System.out.printf("\t%-13s = %d%n", "Player Wins", PLAYER_WINS);
+        System.out.printf("\t%-13s = %d%n", "Total Ties", TIES);
     }
 }
