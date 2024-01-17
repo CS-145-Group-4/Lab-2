@@ -14,6 +14,7 @@ public class CardGame {
     public static void main(String[] args) {
         Scanner console = new Scanner(System.in);
         System.out.println("This is a console based poker game");
+        System.out.println();
         game(console);
     }
 
@@ -22,8 +23,8 @@ public class CardGame {
     //and if their hand beat the dealers hand.
     //at the end of the hands dealt, outputs the statistics for the hands played.
     public static void game(Scanner console) {
-        String response = "y";
-        while (!response.equals("n")) {
+        int keepPlaying = 3;
+        while (keepPlaying != 0) {
             DeckOfCards gameDeck = new DeckOfCards();
             gameDeck.shuffle();
             int handSize = 5;
@@ -52,12 +53,18 @@ public class CardGame {
             System.out.println();
 
             winMessage(dealerHand,playerHand);
+            keepPlaying = 3;
             //Ask player if they would like to play again using while statement for proper input
-            System.out.println("Would you like to play again? (Y/N)");
-            response = console.next();
-            while (!response.equalsIgnoreCase("n") || !response.equalsIgnoreCase("y")){
-                System.out.println("Invalid input -- Try again");
-                response = console.next().substring(0,1);
+            System.out.println("Would you like to play a game? (Y/N)");
+            while (keepPlaying != 1 && keepPlaying != 0 ) {
+                String response = console.next().substring(0, 1);
+                if (response.equalsIgnoreCase("N")) {
+                    keepPlaying = 0;
+                } else if (response.equalsIgnoreCase("Y")) {
+                    keepPlaying = 1;
+                } else {
+                    System.out.println("Invalid input -- Try again");
+                }
             }
         }
 
