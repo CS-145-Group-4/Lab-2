@@ -39,19 +39,22 @@ public class CardGame {
             //swap for method using card.
             //compare to swap cards around using for method like shuffle
             Arrays.sort(playerHand);
-            int playerHandScore = DeckOfCards.evaluateHand(playerHand);
-            System.out.println(DeckOfCards.stateEvaluation(playerHandScore, playerHand));
             System.out.println("Player Hand:");
             for (Card card : playerHand) {
                 System.out.println(card);
             }
             System.out.println();
 
+// can also comment this out later but would like to see the dealer hand
+            for (Card card : dealerHand) {
+                System.out.println(card);
+            }
+
             winMessage(dealerHand,playerHand);
             //Ask player if they would like to play again using while statement for proper input
             System.out.println("Would you like to play again? (Y/N)");
             response = console.next();
-            while (!response.equalsIgnoreCase("n") || !response.equalsIgnoreCase("y")){
+            while (!response.equalsIgnoreCase("y")){
                 System.out.println("Invalid input -- Try again");
                 response = console.next().substring(0,1);
             }
@@ -63,6 +66,13 @@ public class CardGame {
     public static void winMessage(Card[] dealerHand,Card[] playerHand){
         int dealerHandScore = DeckOfCards.evaluateHand(dealerHand);
         int playerHandScore = DeckOfCards.evaluateHand(playerHand);
+        // bunch of stuff to print
+        System.out.println(playerHandScore);
+        System.out.println(dealerHandScore);
+        DeckOfCards.stateEvaluation(playerHandScore, playerHand);
+        DeckOfCards.stateEvaluation(dealerHandScore, dealerHand);
+        // if scores are equal and winner depends on high card
+
         if (dealerHandScore < playerHandScore) {
             System.out.println("Dealer Wins");
             DEALER_WINS++;
@@ -73,7 +83,7 @@ public class CardGame {
             if (DeckOfCards.highCard(playerHand) == DeckOfCards.highCard(dealerHand)) {
                 System.out.println("It's a tie!");
                 TIES++;
-            } else if (DeckOfCards.highCard(playerHand) < DeckOfCards.highCard(dealerHand)) {
+            } else if (DeckOfCards.highCard(playerHand) > DeckOfCards.highCard(dealerHand)) {
                 System.out.println("Player Wins");
                 PLAYER_WINS++;
             } else {

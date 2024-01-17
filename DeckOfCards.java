@@ -24,6 +24,9 @@ public class DeckOfCards {
         }
     }
 
+    public DeckOfCards(Card[] deck) {
+        this.deck = deck; 
+    }
     public void shuffle() {
         currentCard = 0;
         Random randomNumber = new Random();
@@ -66,44 +69,44 @@ public class DeckOfCards {
             return 2;
         } else if (kindCount(hand) == 3) {
             return 3;
-        // } else if (fullHouse(hand) == 1) {
-        //     return 4;
-        } else if (kindCount(hand) == 2) {
+        } else if (fullHouse(hand) == 1) {
+            return 4;
+        } else if (kindCount(hand) == 3) {
             return 5;
         } else if (straight(hand) == 1) {
             return 6;
-        } else if (kindCount(hand) == 1) {
+        } else if (threeOfAKind(hand) == 1) {
             return 7;
         } else if (pair(hand) == 2) {
             return 8;
         } else if (pair(hand) == 1) {
             return 9;
         } else {
-            return 10 + highCard(hand);
+            return 10;
         }
     }
     //gives player information
-    public static String stateEvaluation(int score,Card[] hand) {
+    public static void stateEvaluation(int score,Card[] hand) {
         if (score == 1) {
-            return "This hand has a royal flush";
+            System.out.println("This hand has a royal flush");
         } else if (score == 2) {
-            return "This hand has a straight flush";
+            System.out.println("This hand has a straight flush");
         } else if (score == 3) {
-            return "This hand has four of a kind";
+            System.out.println("This hand has four of a kind");
         } else if (score == 4) {
-            return "This hand has a full house";
+            System.out.println("This hand has a full house");
         } else if (score == 5) {
-            return "This hand has a flush";
+            System.out.println("This hand has a flush");
         } else if (score == 6) {
-            return "This hand has a straight";
+            System.out.println("This hand has a straight");
         } else if (score == 7) {
-            return "This hand has a triple";
+            System.out.println("This hand has a triple");
         } else if (score == 8) {
-            return "This hand has two pairs";
+            System.out.println("This hand has two pairs");
         } else if (score == 9) {
-            return "This hand has a pair";
+            System.out.println("This hand has a pair");
         } else {
-            return "This hand's highest card is " + highCard(hand);
+            System.out.println("This hand's highest card is " + highCard(hand));
         }
     }
 
@@ -130,13 +133,17 @@ public class DeckOfCards {
         return 0;
     }
 
-    //Checks if hand has a fullHouse
-    // public static int fullHouse(Card[] hand){
-    //     if() {
-    //         return 1;
-    //     }
-    //     return 0;
-    // }
+    // Checks if hand has a fullHouse
+    // when sorted will be 3 3 J J J or 3 3 3 J J
+    public static int fullHouse(Card[] hand){
+        if ((hand[0].getFaceValue() == hand[1].getFaceValue()) && ((hand[2].getFaceValue() == hand[3].getFaceValue()) && (hand [2].getFaceValue() == hand[4].getFaceValue()))) {
+            return 1;
+        } else if ((hand[3].getFaceValue() == hand[4].getFaceValue()) && ((hand[0].getFaceValue() == hand[1].getFaceValue()) && (hand [0].getFaceValue() == hand[2].getFaceValue()))) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     //Checks if hand has a straight
     public static int straight(Card[] hand) {
@@ -164,11 +171,11 @@ public class DeckOfCards {
     
     // checks if hand has a three of a kind
     public static int threeOfAKind(Card[] hand) {
-        int count = 1;
+        int count = 0;
         // checks equivalence between current card starting at index 1
         // against all cards in the indices below it
         // hopefully
-        for (int x = 1; x < hand.length; x++) {
+        for (int x = 2; x < hand.length; x++) {
             for (int y = 0; y < x; y++) {
                 if(hand[x].getFace().equals(hand[y].getFace())) {
                     count++;
@@ -206,7 +213,7 @@ public class DeckOfCards {
     //Finds hands highest card
     public static int highCard(Card[] hand) {
         int highCard = 0;
-        for (int count = 0; count < 5; count++) {
+        for (int count = 0; count < hand.length; count++) {
             if (hand[count].getFaceValue() > highCard) {
                 highCard = hand[count].getFaceValue();
             }
