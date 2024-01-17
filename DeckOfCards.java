@@ -123,7 +123,7 @@ public class DeckOfCards {
                         if (hand[first].getFaceValue() == hand[second].getFaceValue()) {
                             foundPair = true;
                         }
-                        if (!foundFourOfKind && foundPair && (hand[third].getFaceValue() == hand[fourth].getFaceValue()) ||
+                        if (!foundFourOfKind && !foundThreeOfKind && foundPair && (hand[third].getFaceValue() == hand[fourth].getFaceValue()) ||
                         (highPair)){
                             foundTwoPair = true;
                         }
